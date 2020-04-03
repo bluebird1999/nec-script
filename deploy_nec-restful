@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -x
+
+user=`whoami`
+SOURCE_NEC_RESTFUL="/home/${user}/working/java/nec-restful"
+TARGET_NEC_RESTFUL="/usr/etc/nec-restful"
+
+echo "----------------------------------"
+echo "Deploying nec-restful to the restful!"
+
+echo "recompile the code..."
+
+cd $SOURCE_NEC_RESTFUL
+mvn clean
+mvn package
+
+echo "kill current nec-restful client..."
+cd $TARGET_NEC_RESTFUL/bin/
+kill -9 $(lsof -i:8080 -t)
+
+echo "update the binaray..."
+rm $TARGET_NEC_RESTFUL/bin/nec-restful-1.0.jar
+cp $SOURCE_NEC_RESTFUL/target/nec-restful-1.0.jar $TARGET_NEC_RESTFUL/bin/
+
+echo "update the library..."
+rm -rf $TARGET_NEC_RESTFUL/lib/
+cp -r $SOURCE_NEC_RESTFUL/target/lib/ $TARGET_NEC_RESTFUL/
+
+echo "update the config files..."
+rm -rf $TARGET_NEC_RESTFUL/bin/config
+cp -r $SOURCE_NEC_RESTFUL/src/main/resources/ $TARGET_NEC_RESTFUL/bin/config
+
+echo "start the daemon again..."
+cd $TARGET_NEC_RESTFUL/bin/
+./start.sh
+
+echo "sleep for 8 seconds..."
+sleep 8
+
+echo "catch initial log..."
+cat ../log/nec-restful.log

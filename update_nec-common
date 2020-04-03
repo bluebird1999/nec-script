@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -x
+
+user=`whoami`
+SOURCE_NEC_COMMON="/home/${user}/working/java/nec-common"
+
+echo "----------------------------------"
+echo "Deploying nec-common to the common!"
+
+echo "recompile the code..."
+
+cd $SOURCE_NEC_COMMON
+mvn clean
+mvn package
+mvn install

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -x
+
+user=`whoami`
+SOURCE_NEC_WEBSOCKET="/home/${user}/working/java/nec-websocket"
+TARGET_NEC_WEBSOCKET="/usr/etc/nec-websocket"
+
+echo "----------------------------------"
+echo "Deploying nec-websocket to the websocket!"
+
+echo "recompile the code..."
+
+cd $SOURCE_NEC_WEBSOCKET
+mvn clean
+mvn package
+
+echo "kill current nec-websocket client..."
+cd $TARGET_NEC_WEBSOCKET/bin/
+kill -9 $(lsof -i:8083 -t)
+
+echo "update the binaray..."
+rm $TARGET_NEC_WEBSOCKET/bin/nec-websocket-1.0.jar
+cp $SOURCE_NEC_WEBSOCKET/target/nec-websocket-1.0.jar $TARGET_NEC_WEBSOCKET/bin/
+
+echo "update the library..."
+rm -rf $TARGET_NEC_WEBSOCKET/lib/
+cp -r $SOURCE_NEC_WEBSOCKET/target/lib/ $TARGET_NEC_WEBSOCKET/
+
+echo "update the config files..."
+rm -rf $TARGET_NEC_WEBSOCKET/bin/config
+cp -r $SOURCE_NEC_WEBSOCKET/src/main/resources/ $TARGET_NEC_WEBSOCKET/bin/config/
+
+echo "start the daemon again..."
+cd $TARGET_NEC_WEBSOCKET/bin/
+./start.sh
+
+echo "sleep for 8 seconds..."
+sleep 8
+
+echo "catch initial log..."
+cat ../log/nec-websocket.log

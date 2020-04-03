@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -x
+user=`whoami`
+SOURCE_NEC_AGENT="/home/${user}/working/java/nec-agent"
+TARGET_NEC_AGENT="/usr/etc/nec-agent"
+
+echo "----------------------------------"
+echo "Deploying nec-agent to the server!"
+
+echo "recompile the code..."
+
+cd $SOURCE_NEC_AGENT
+mvn clean
+mvn package
+
+echo "kill current nec-agent client..."
+cd $TARGET_NEC_AGENT/bin/
+./run.sh stop
+
+echo "update the binaray..."
+rm $TARGET_NEC_AGENT/bin/nec-agent-1.0.jar
+cp $SOURCE_NEC_AGENT/target/nec-agent-1.0.jar $TARGET_NEC_AGENT/bin/
+
+echo "update the library..."
+rm -rf $TARGET_NEC_AGENT/lib/
+cp -r $SOURCE_NEC_AGENT/target/lib/ $TARGET_NEC_AGENT/
+
+echo "update the config files..."
+rm -rf $TARGET_NEC_AGENT/bin/config
+cp -r $SOURCE_NEC_AGENT/src/main/resources/config/ $TARGET_NEC_AGENT/bin
+
+echo "start the daemon again..."
+cd $TARGET_NEC_AGENT/bin/
+./run.sh start
+
+echo "sleep for 8 seconds..."
+sleep 8
+
+echo "catch initial log..."
+cat ../log/nec-agent.log

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -x
+
+user=`whoami`
+SOURCE_NEC_SERVER="/home/${user}/working/java/nec-server"
+TARGET_NEC_SERVER="/usr/etc/nec-server"
+
+echo "----------------------------------"
+echo "Deploying nec-server to the server!"
+
+echo "recompile the code..."
+
+cd $SOURCE_NEC_SERVER
+mvn clean
+mvn package
+
+echo "kill current nec-server client..."
+cd $TARGET_NEC_SERVER/bin/
+./run.sh stop
+
+echo "update the binaray..."
+rm $TARGET_NEC_SERVER/bin/nec-server-1.0.jar
+cp $SOURCE_NEC_SERVER/target/nec-server-1.0.jar $TARGET_NEC_SERVER/bin/
+
+echo "update the library..."
+rm -rf $TARGET_NEC_SERVER/lib/
+cp -r $SOURCE_NEC_SERVER/target/lib/ $TARGET_NEC_SERVER/
+
+echo "update the config files..."
+rm -rf $TARGET_NEC_SERVER/bin/config
+cp -r $SOURCE_NEC_SERVER/src/main/resources/config/ $TARGET_NEC_SERVER/bin
+
+echo "start the daemon again..."
+cd $TARGET_NEC_SERVER/bin/
+./run.sh start
+
+echo "sleep for 8 seconds..."
+sleep 8
+
+echo "catch initial log..."
+cat ../log/nec-server.log

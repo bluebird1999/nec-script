@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -x
+user=`whoami`
+SOURCE_NEC_COMMON="/home/${user}/working/java/nec-common"
+SOURCE_NEC_SCRIPT="/home/${user}/working/java/nec-script"
+
+echo "----------------------------------"
+echo "Deploying nec-common to the common!"
+
+echo "recompile the code..."
+
+cd $SOURCE_NEC_COMMON
+mvn clean
+mvn package
+mvn install
+
+cd $SOURCE_NEC_SCRIPT
+./deploy_nec-agent
+./deploy_nec-server
+./deploy_nec-websocket
+./deploy_nec-restful
