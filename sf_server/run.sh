@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-pwd
+source /home/`whoami`/.profile
 APP_NAME="nec-server"
 MAIN_CLASS="com.globe_sh.cloudplatform.server.ServerMain"
 JAVA_OPTS="-Xms128m -Xmx512m -D$APP_NAME -server"

@@ -5,6 +5,7 @@ set -x
 user=`whoami`
 SOURCE_NEC_SERVER="/home/${user}/working/java/nec-server"
 TARGET_NEC_SERVER="/usr/etc/nec-server"
+SCRIPT_NEC_SERVER="/home/${user}/working/java/nec-script/sf_server"
 
 echo "----------------------------------"
 echo "Deploying nec-server to the server!"
@@ -22,6 +23,12 @@ cd $TARGET_NEC_SERVER/bin/
 echo "update the binaray..."
 rm $TARGET_NEC_SERVER/bin/nec-server-1.0.jar
 cp $SOURCE_NEC_SERVER/target/nec-server-1.0.jar $TARGET_NEC_SERVER/bin/
+
+echo "update script..."
+rm $TARGET_NEC_SERVER/bin/run.sh
+cp $SCRIPT_NEC_SERVER/run.sh $TARGET_NEC_SERVER/bin/
+rm $TARGET_NEC_SERVER/bin/log4j.properties
+cp $SCRIPT_NEC_SERVER/log4j.properties $TARGET_NEC_SERVER/bin/
 
 echo "update the library..."
 rm -rf $TARGET_NEC_SERVER/lib/

@@ -5,6 +5,7 @@ set -x
 user=`whoami`
 SOURCE_NEC_WEBSOCKET="/home/${user}/working/java/nec-websocket"
 TARGET_NEC_WEBSOCKET="/usr/etc/nec-websocket"
+SCRIPT_NEC_WEBSOCKET="/home/${user}/working/java/nec-script/sf_websocket"
 
 echo "----------------------------------"
 echo "Deploying nec-websocket to the websocket!"
@@ -22,6 +23,12 @@ kill -9 $(lsof -i:8083 -t)
 echo "update the binaray..."
 rm $TARGET_NEC_WEBSOCKET/bin/nec-websocket-1.0.jar
 cp $SOURCE_NEC_WEBSOCKET/target/nec-websocket-1.0.jar $TARGET_NEC_WEBSOCKET/bin/
+
+echo "update script..."
+rm $TARGET_NEC_WEBSOCKET/bin/start.sh
+cp $SCRIPT_NEC_WEBSOCKET/start.sh $TARGET_NEC_WEBSOCKET/bin/
+rm $TARGET_NEC_WEBSOCKET/bin/log4j.properties
+cp $SCRIPT_NEC_WEBSOCKET/log4j.properties $TARGET_NEC_WEBSOCKET/bin/
 
 echo "update the library..."
 rm -rf $TARGET_NEC_WEBSOCKET/lib/

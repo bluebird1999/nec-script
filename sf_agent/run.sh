@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+source /home/`whoami`/.profile
 
 APP_NAME="nec-agent"
 MAIN_CLASS="com.globe_sh.cloudplatform.agent.AgentMain"

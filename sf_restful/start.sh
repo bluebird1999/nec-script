@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
+source /home/`whoami`/.profile
 APP_NAME="nec-restful"
 JAVA_OPTS="-Xms128m -Xmx512m -D$APP_NAME -server"
 

@@ -5,6 +5,7 @@ set -x
 user=`whoami`
 SOURCE_NEC_RESTFUL="/home/${user}/working/java/nec-restful"
 TARGET_NEC_RESTFUL="/usr/etc/nec-restful"
+SCRIPT_NEC_RESTFUL="/home/${user}/working/java/nec-script/sf_restful"
 
 echo "----------------------------------"
 echo "Deploying nec-restful to the restful!"
@@ -22,6 +23,10 @@ kill -9 $(lsof -i:8080 -t)
 echo "update the binaray..."
 rm $TARGET_NEC_RESTFUL/bin/nec-restful-1.0.jar
 cp $SOURCE_NEC_RESTFUL/target/nec-restful-1.0.jar $TARGET_NEC_RESTFUL/bin/
+
+echo "update script..."
+rm $TARGET_NEC_RESTFUL/bin/start.sh
+cp $SCRIPT_NEC_RESTFUL/start.sh $TARGET_NEC_RESTFUL/bin/
 
 echo "update the library..."
 rm -rf $TARGET_NEC_RESTFUL/lib/

@@ -4,6 +4,7 @@ set -x
 user=`whoami`
 SOURCE_NEC_AGENT="/home/${user}/working/java/nec-agent"
 TARGET_NEC_AGENT="/usr/etc/nec-agent"
+SCRIPT_NEC_AGENT="/home/${user}/working/java/nec-script/sf_agent" 
 
 echo "----------------------------------"
 echo "Deploying nec-agent to the server!"
@@ -21,6 +22,12 @@ cd $TARGET_NEC_AGENT/bin/
 echo "update the binaray..."
 rm $TARGET_NEC_AGENT/bin/nec-agent-1.0.jar
 cp $SOURCE_NEC_AGENT/target/nec-agent-1.0.jar $TARGET_NEC_AGENT/bin/
+
+echo "update script..."
+rm $TARGET_NEC_AGENT/bin/run.sh
+cp $SCRIPT_NEC_AGENT/run.sh $TARGET_NEC_AGENT/bin/
+rm $TARGET_NEC_AGENT/bin/log4j.properties
+cp $SCRIPT_NEC_AGENT/log4j.properties $TARGET_NEC_AGENT/bin/
 
 echo "update the library..."
 rm -rf $TARGET_NEC_AGENT/lib/
