@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -x
+
+user=`whoami`
+SOURCE_NEC_ADMIN="/home/${user}/working/java/nec-admin"
+TARGET_NEC_ADMIN="/usr/etc/nec-admin"
+SCRIPT_NEC_ADMIN="/home/${user}/working/java/nec-script/sf_admin"
+
+echo "----------------------------------"
+echo "Deploying nec-admin to the restful!"
+
+echo "recompile the code..."
+
+cd $SOURCE_NEC_ADMIN
+mvn clean
+mvn package
+
+echo "kill current nec-admin client..."
+cd $TARGET_NEC_ADMIN/bin/
+kill -9 $(lsof -i:8081 -t)
+
+echo "update the binaray..."
+rm $TARGET_NEC_ADMIN/bin/nec-admin-1.0.jar
+cp $SOURCE_NEC_ADMIN/target/nec-admin-1.0.jar $TARGET_NEC_ADMIN/bin/
+
+echo "update script..."
+rm $TARGET_NEC_ADMIN/bin/start.sh
+cp $SCRIPT_NEC_ADMIN/start.sh $TARGET_NEC_ADMIN/bin/
+
+echo "update the library..."
+rm -rf $TARGET_NEC_ADMIN/lib/
+cp -r $SOURCE_NEC_ADMIN/target/lib/ $TARGET_NEC_ADMIN/
+
+echo "update the config files..."
+rm -rf $TARGET_NEC_ADMIN/bin/config
+cp -r $SOURCE_NEC_ADMIN/src/main/resources/ $TARGET_NEC_ADMIN/bin/config
+
+echo "start the daemon again..."
+cd $TARGET_NEC_ADMIN/bin/
+./start.sh
+
+echo "sleep for 8 seconds..."
+sleep 8
+
+echo "catch initial log..."
+cat ../log/nec-admin.log
