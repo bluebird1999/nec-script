@@ -6,5 +6,5 @@ JAVA_OPTS="-Xms128m -Xmx512m -D$APP_NAME -server -Dfile.encoding=UTF-8"
 
    echo "JAVA_HOME=$JAVA_HOME"
    echo "$APP_NAME trying to start ......"
-   nohup $JAVA_HOME/bin/java $JAVA_OPTS -jar /usr/etc/nec-restful/bin/nec-restful-1.0.jar > /usr/etc/nec-restful/log/nec-restful.log 2>&1 &
+   nohup $JAVA_HOME/bin/java $JAVA_OPTS -jar /usr/etc/nec-restful/bin/nec-restful-1.0.jar > /dev/null 2>&1 &
    echo "$APP_NAME started success..."
