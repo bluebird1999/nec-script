@@ -4,7 +4,7 @@ source /home/`whoami`/.profile
 
 APP_NAME="nec-agent"
 MAIN_CLASS="com.globe_sh.cloudplatform.agent.AgentMain"
-JAVA_OPTS="-Xms128m -Xmx512m -D$APP_NAME -server"
+JAVA_OPTS="-Xms128m -Xmx1024m -XX:MaxDirectMemorySize=512M -D$APP_NAME -server"
 CLASSPATH=.:./lib:nec-agent-1.0.jar
 for i in ../lib/*.jar; do
 	CLASSPATH=$CLASSPATH:$i
