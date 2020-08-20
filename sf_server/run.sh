@@ -27,7 +27,7 @@ start() {
     echo "MAIN_CLASS=$MAIN_CLASS"
     echo "$APP_NAME trying to start ......"
     check || exit 1
-    nohup $JAVA_HOME/bin/java $JAVA_OPTS $MAIN_CLASS > /usr/etc/nec-server/log/nec-server.log 2>&1 &
+    nohup $JAVA_HOME/bin/java $JAVA_OPTS $MAIN_CLASS > /usr/etc/nec-server${2}/log/nec-server.log 2>&1 &
     echo "$APP_NAME started success..."
 }
 

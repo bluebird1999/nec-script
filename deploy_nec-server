@@ -7,6 +7,8 @@ SOURCE_NEC_SERVER="/home/${user}/working/java/nec-server"
 TARGET_NEC_SERVER="/usr/etc/nec-server"
 SCRIPT_NEC_SERVER="/home/${user}/working/java/nec-script/sf_server"
 
+SNUM=$1
+
 echo "----------------------------------"
 echo "Deploying nec-server to the server!"
 
@@ -16,34 +18,46 @@ cd $SOURCE_NEC_SERVER
 mvn clean
 mvn package
 
-echo "kill current nec-server client..."
-cd $TARGET_NEC_SERVER/bin/
-./run.sh stop
+echo "kill current nec-server$NUM..."
+echo "Stopping $APP_NAME ......"
+kill -9 $(ps -ef | grep ServerMain | grep -v grep | awk '{print $2}')
 
-echo "update the binaray..."
-rm $TARGET_NEC_SERVER/bin/nec-server-1.0.jar
-cp $SOURCE_NEC_SERVER/target/nec-server-1.0.jar $TARGET_NEC_SERVER/bin/
+for ((i=1; i<=SNUM; i++))
+do
+	#folder
+	echo "check folder..."
+	if [ ! -d $TARGET_NEC_SERVER${i} ]; then
+		mkdir $TARGET_NEC_SERVER${i}
+	fi
+	if [ ! -d $TARGET_NEC_SERVER${i}/bin ]; then
+		mkdir $TARGET_NEC_SERVER${i}/bin
+	fi
+	if [ ! -d $TARGET_NEC_SERVER${i}/lib ]; then
+		mkdir $TARGET_NEC_SERVER${i}/lib
+	fi
+	if [ ! -d $TARGET_NEC_SERVER${i}/log ]; then
+		mkdir $TARGET_NEC_SERVER${i}/log
+	fi
 
-echo "update script..."
-rm $TARGET_NEC_SERVER/bin/run.sh
-cp $SCRIPT_NEC_SERVER/run.sh $TARGET_NEC_SERVER/bin/
-rm $TARGET_NEC_SERVER/bin/log4j.properties
-cp $SCRIPT_NEC_SERVER/log4j.properties $TARGET_NEC_SERVER/bin/
+	echo "update the binaray..."
+	rm $TARGET_NEC_SERVER${i}/bin/nec-server-1.0.jar
+	cp $SOURCE_NEC_SERVER/target/nec-server-1.0.jar $TARGET_NEC_SERVER${i}/bin/
 
-echo "update the library..."
-rm -rf $TARGET_NEC_SERVER/lib/
-cp -r $SOURCE_NEC_SERVER/target/lib/ $TARGET_NEC_SERVER/
+	echo "update script..."
+	rm $TARGET_NEC_SERVER${i}/bin/run.sh
+	cp $SCRIPT_NEC_SERVER/run.sh $TARGET_NEC_SERVER${i}/bin/
+	rm $TARGET_NEC_SERVER${i}/bin/log4j.properties
+	cp $SCRIPT_NEC_SERVER/log4j.properties $TARGET_NEC_SERVER${i}/bin/
 
-echo "update the config files..."
-rm -rf $TARGET_NEC_SERVER/bin/config
-cp -r $SOURCE_NEC_SERVER/src/main/resources/config/ $TARGET_NEC_SERVER/bin
+	echo "update the library..."
+	rm -rf $TARGET_NEC_SERVER${i}/lib/
+	cp -r $SOURCE_NEC_SERVER/target/lib/ $TARGET_NEC_SERVER${i}/
 
-echo "start the daemon again..."
-cd $TARGET_NEC_SERVER/bin/
-./run.sh start
+	echo "update the config files..."
+	rm -rf $TARGET_NEC_SERVER${i}/bin/config
+	cp -r $SOURCE_NEC_SERVER/src/main/resources/config/ $TARGET_NEC_SERVER${i}/bin
 
-echo "sleep for 8 seconds..."
-sleep 8
-
-echo "catch initial log..."
-cat ../log/nec-server.log
+	echo "start the daemon again..."
+	cd $TARGET_NEC_SERVER${i}/bin/
+	./run.sh start ${i}
+done
