@@ -40,9 +40,3 @@ cp -r $SOURCE_NEC_AGENT/src/main/resources/config/ $TARGET_NEC_AGENT/bin
 echo "start the daemon again..."
 cd $TARGET_NEC_AGENT/bin/
 ./run.sh start
-
-echo "sleep for 8 seconds..."
-sleep 8
-
-echo "catch initial log..."
-cat ../log/nec-agent.log

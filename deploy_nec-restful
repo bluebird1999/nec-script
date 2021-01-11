@@ -39,9 +39,3 @@ cp -r $SOURCE_NEC_RESTFUL/src/main/resources/ $TARGET_NEC_RESTFUL/bin/config
 echo "start the daemon again..."
 cd $TARGET_NEC_RESTFUL/bin/
 ./start.sh
-
-echo "sleep for 8 seconds..."
-sleep 8
-
-echo "catch initial log..."
-cat ../log/nec-restful.log

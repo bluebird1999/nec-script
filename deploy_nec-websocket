@@ -18,7 +18,7 @@ mvn package
 
 echo "kill current nec-websocket client..."
 cd $TARGET_NEC_WEBSOCKET/bin/
-kill -9 $(lsof -i:8083 -t)
+kill -9 $(lsof -i:8443 -t)
 
 echo "update the binaray..."
 rm $TARGET_NEC_WEBSOCKET/bin/nec-websocket-1.0.jar
@@ -39,9 +39,3 @@ cp -r $SOURCE_NEC_WEBSOCKET/src/main/resources/ $TARGET_NEC_WEBSOCKET/bin/config
 echo "start the daemon again..."
 cd $TARGET_NEC_WEBSOCKET/bin/
 ./start.sh
-
-echo "sleep for 8 seconds..."
-sleep 8
-
-echo "catch initial log..."
-cat ../log/nec-websocket.log
